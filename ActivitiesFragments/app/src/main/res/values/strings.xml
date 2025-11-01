@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Activities-Fragments</string>
     <string name="save_and_create">Save and Create</string>
+    <string name="view_all_created_items">View All Created Items</string>
+    <string name="description">Description</string>
+    <string name="item_name_required">Item Name (Required)</string>
+    <string name="create_new_item">Create New Item</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="enter_details_for_your_new_item">Enter details for your new item:</string>
+    <string name="view_list">View List</string>
+    <string name="items_overview">Items Overview</string>
+    <string name="currently_created_items">Currently Created Items (%1$d):</string>
+    <string name="go_to_creation_screen">Go to Creation Screen</string>
+    <string name="welcome_to_the_item_manager">Welcome to the Item Manager!</string>
+    <string name="select_an_option_below_to_start_creating_or_view_your_existing_items">Select an option below to start creating or view your existing items.</string>
+    <string name="create_item">Create Item</string>
+    <string name="view_overview">View Overview</string>
+    <string name="view_all_items">View All Items</string>
 </resources>

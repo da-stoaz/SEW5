@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.stoaz.activities_fragments.data.ItemData
@@ -106,13 +107,13 @@ fun OverviewScreen(modifier: Modifier = Modifier) {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back to Home",
+                        contentDescription = stringResource(R.string.back_to_home),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
 
                 Text(
-                    text = "Items Overview",
+                    text = stringResource(R.string.items_overview),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.padding(start = 8.dp)
@@ -134,7 +135,7 @@ fun OverviewScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Currently Created Items (${itemsList.size}):",
+                    text = stringResource(R.string.currently_created_items, itemsList.size),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -167,7 +168,7 @@ fun OverviewScreen(modifier: Modifier = Modifier) {
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Create Item", Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Go to Creation Screen")
+                Text(stringResource(R.string.go_to_creation_screen))
             }
         }
     }

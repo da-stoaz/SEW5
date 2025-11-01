@@ -75,13 +75,13 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back to Home",
+                        contentDescription = stringResource(R.string.back_to_home),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
 
                 Text(
-                    text = "Create New Item",
+                    text = stringResource(R.string.create_new_item),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.padding(start = 8.dp)
@@ -104,7 +104,7 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Enter details for your new item:",
+                    text = stringResource(R.string.enter_details_for_your_new_item),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -113,7 +113,7 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                 OutlinedTextField(
                     value = itemName,
                     onValueChange = { itemName = it },
-                    label = { Text("Item Name (Required)") },
+                    label = { Text(stringResource(R.string.item_name_required)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -123,10 +123,12 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                 OutlinedTextField(
                     value = itemDescription,
                     onValueChange = { itemDescription = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(R.string.description)) },
                     singleLine = false,
                     maxLines = 4,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 100.dp)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
@@ -168,9 +170,9 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Filled.List, contentDescription = "View List", Modifier.size(20.dp))
+                Icon(Icons.Filled.List, contentDescription = stringResource(R.string.view_list), Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("View All Created Items")
+                Text(stringResource(R.string.view_all_created_items))
             }
         }
     }

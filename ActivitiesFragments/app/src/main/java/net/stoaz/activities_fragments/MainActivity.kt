@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,7 +73,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
     ) {
         // 1. Title and Message
         Text(
-            text = "Welcome to the Item Manager!",
+            text = stringResource(R.string.welcome_to_the_item_manager),
             style = MaterialTheme.typography.displaySmall, // Large, impactful title style
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -84,7 +85,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
 
         // 2. Subtitle / Message
         Text(
-            text = "Select an option below to start creating or view your existing items.",
+            text = stringResource(R.string.select_an_option_below_to_start_creating_or_view_your_existing_items),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -107,9 +108,9 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Create Item", Modifier.size(20.dp))
+                Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.create_item), Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("Create New Item", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.create_new_item), style = MaterialTheme.typography.titleMedium)
             }
 
             // Space between buttons
@@ -123,9 +124,9 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Filled.List, contentDescription = "View Overview", Modifier.size(20.dp))
+                Icon(Icons.Filled.List, contentDescription = stringResource(R.string.view_overview), Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
-                Text("View All Items", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.view_all_items), style = MaterialTheme.typography.titleMedium)
             }
         }
     }
