@@ -19,18 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.stoaz.activities_fragments.data.ItemData
 import net.stoaz.activities_fragments.ui.theme.ActivitiesFragmentsTheme
 
-// --- Data Structure for Homework Scope ---
 
-// Keys used for passing data via Intent
-const val EXTRA_ITEM_NAME = "extra_item_name"
-const val EXTRA_ITEM_DESCRIPTION = "extra_item_description"
-
-data class ItemData(
-    val name: String,
-    val description: String = "No description provided."
-)
 
 /**
  * Simple static data store to hold the list of items for the duration of the app's process.
@@ -58,12 +50,14 @@ class OverviewActivity : ComponentActivity() {
 
         // 1. CHECK INCOMING INTENT FOR NEW ITEM DATA
         // If the Intent contains the required key, a new item was saved from CreateItemActivity.
-        if (intent.hasExtra(EXTRA_ITEM_NAME)) {
-            val newItemName = intent.getStringExtra(EXTRA_ITEM_NAME) ?: "Untitled Item"
-            val newItemDescription = intent.getStringExtra(EXTRA_ITEM_DESCRIPTION) ?: "No description provided."
+        if (intent.hasExtra(EXTRA_NEW_ITEM)) {
+            val newItemData = intent.getParcelableExtra(EXTRA_NEW_ITEM, ItemData::class.java)
 
             // Add the new item to our static list
-            AppItems.list.add(ItemData(newItemName, newItemDescription))
+            if (newItemData != null){
+                AppItems.list.add(newItemData)
+            }
+
         }
 
         setContent {
@@ -125,7 +119,6 @@ fun OverviewScreen(modifier: Modifier = Modifier) {
                 )
             }
         }
-        // -----------------------------
 
         // Main content area
         Column(

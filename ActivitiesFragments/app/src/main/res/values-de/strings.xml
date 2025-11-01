@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Activities-Fragments</string>
+    <string name="save_and_create">Speichern und Erstellen</string>
+</resources>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Activities-Fragments</string>
+    <string name="save_and_create">Save and Create</string>
 </resources>

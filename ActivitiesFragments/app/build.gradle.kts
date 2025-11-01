@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -12,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "net.stoaz.activities_fragments"
-        minSdk = 35
+        minSdk = 34
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

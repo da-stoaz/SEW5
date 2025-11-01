@@ -14,9 +14,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.stoaz.activities_fragments.data.ItemData
 import net.stoaz.activities_fragments.ui.theme.ActivitiesFragmentsTheme
+
+
+const val EXTRA_NEW_ITEM = "extra_new_item"
+
 
 /**
  * Activity for the "Create" screen.
@@ -132,8 +138,13 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                         val intent = Intent(context, OverviewActivity::class.java)
 
                         // 2. Use Intent.putExtra() to attach the data
-                        intent.putExtra(EXTRA_ITEM_NAME, itemName)
-                        intent.putExtra(EXTRA_ITEM_DESCRIPTION, itemDescription)
+                        val itemData = if (itemDescription.isBlank()) {
+                            ItemData(itemName)
+                        } else {
+                            ItemData(itemName, itemDescription)
+                        }
+                        intent.putExtra(EXTRA_NEW_ITEM, itemData)
+
 
                         // 3. Start the Activity
                         context.startActivity(intent)
@@ -144,7 +155,7 @@ fun CreateItemScreen(modifier: Modifier = Modifier) {
                     enabled = itemName.isNotBlank(), // Only enabled if a name is provided
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Save and Create")
+                    Text(stringResource(R.string.save_and_create))
                 }
             }
 
