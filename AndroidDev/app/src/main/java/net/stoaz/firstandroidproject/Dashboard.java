@@ -14,10 +14,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import net.stoaz.firstandroidproject.data.DataClass;
+import net.stoaz.firstandroidproject.fragments.MyFragment;
 
 public class Dashboard extends AppCompatActivity implements View.OnClickListener{
 
     private Button btnSubmit;
+
+    private MyFragment fragMyFragment;
     private EditText inpName;
 
     private TextView txtCounter;
@@ -35,6 +38,9 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
 
         txtCounter = this.findViewById(R.id.txtCounter);
 
+        fragMyFragment = (MyFragment) getSupportFragmentManager().findFragmentById(R.id.fragMyFragment);
+
+
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null){
@@ -42,15 +48,14 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
 
             if (data != null){
                 txtCounter.setText(Integer.toString(data.getCount()));
-                Log.d(Dashboard.class.getSimpleName(), bundle.getString("test"));
+                fragMyFragment.setData(data);
+                Log.d(Dashboard.class.getSimpleName(), bundle.getString("name"));
                 Log.d(Dashboard.class.getSimpleName(), Integer.toString(data.getCount()));
             }
 
         } else {
             txtCounter.setText("NULL");
         }
-
-
 
 
 
