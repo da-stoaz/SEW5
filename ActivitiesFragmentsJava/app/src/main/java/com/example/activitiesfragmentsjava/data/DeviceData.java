@@ -7,21 +7,26 @@ import androidx.annotation.NonNull;
 
 import java.time.LocalDateTime;
 
-public class ItemData implements Parcelable {
+public class DeviceData implements Parcelable {
 
     private String Id;
 
     private String DeviceName;
 
-    public ItemData() {
+    public static final Creator<DeviceData> CREATOR = new Creator<DeviceData>() {
+        @Override
+        public DeviceData createFromParcel(Parcel in) {
+            return new DeviceData(in);
+        }
 
-    }
+        @Override
+        public DeviceData[] newArray(int size) {
+            return new DeviceData[size];
+        }
+    };
 
-    public ItemData(String deviceName, String manufacturer, String serialNumber, String description) {
-        DeviceName = deviceName;
-        Manufacturer = manufacturer;
-        SerialNumber = serialNumber;
-        Description = description;
+    public DeviceData() {
+
     }
 
     private String Manufacturer;
@@ -81,7 +86,14 @@ public class ItemData implements Parcelable {
     private LocalDateTime UpdatedAt;
 
 
-    protected ItemData(Parcel in) {
+    public DeviceData(String deviceName, String manufacturer, String serialNumber, String description) {
+        DeviceName = deviceName;
+        Manufacturer = manufacturer;
+        SerialNumber = serialNumber;
+        Description = description;
+    }
+
+    protected DeviceData(Parcel in) {
         Id = in.readString();
         DeviceName = in.readString();
         Manufacturer = in.readString();
@@ -93,18 +105,6 @@ public class ItemData implements Parcelable {
             UpdatedAt = null;
         }
     }
-
-    public static final Creator<ItemData> CREATOR = new Creator<ItemData>() {
-        @Override
-        public ItemData createFromParcel(Parcel in) {
-            return new ItemData(in);
-        }
-
-        @Override
-        public ItemData[] newArray(int size) {
-            return new ItemData[size];
-        }
-    };
 
     @Override
     public int describeContents() {

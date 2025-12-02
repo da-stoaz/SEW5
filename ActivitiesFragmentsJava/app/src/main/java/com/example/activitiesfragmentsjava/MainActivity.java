@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         createItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CreateItemActivity.class);
+                Intent intent = new Intent(MainActivity.this, CreateDeviceActivity.class);
                 startActivity(intent);
             }
         });
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         viewItemsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ViewItemsActivity.class);
+                Intent intent = new Intent(MainActivity.this, DeviceOverviewActivity.class);
                 startActivity(intent);
             }
         });

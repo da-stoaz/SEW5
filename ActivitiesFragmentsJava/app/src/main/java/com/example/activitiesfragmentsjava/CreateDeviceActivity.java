@@ -12,9 +12,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.activitiesfragmentsjava.data.ItemData;
+import com.example.activitiesfragmentsjava.data.DeviceData;
 
-public class CreateItemActivity extends AppCompatActivity {
+public class CreateDeviceActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +37,15 @@ public class CreateItemActivity extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ItemData itemData = new ItemData(
+                DeviceData deviceData = new DeviceData(
                         deviceName.getText().toString(),
                         manufacturer.getText().toString(),
                         serialNumber.getText().toString(),
                         description.getText().toString()
                 );
 
-                Intent intent = new Intent(CreateItemActivity.this, ViewItemsActivity.class);
-                intent.putExtra("itemData", itemData);
+                Intent intent = new Intent(CreateDeviceActivity.this, DeviceOverviewActivity.class);
+                intent.putExtra("deviceData", deviceData);
                 startActivity(intent);
             }
         });
