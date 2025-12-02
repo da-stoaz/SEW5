@@ -1,6 +1,7 @@
 package com.example.activitiesfragmentsjava;
 
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.activitiesfragmentsjava.data.DeviceData;
 import com.example.activitiesfragmentsjava.fragments.DeviceListFragment;
+
+import java.util.ArrayList;
 
 public class DeviceOverviewActivity extends AppCompatActivity {
 
@@ -24,12 +27,15 @@ public class DeviceOverviewActivity extends AppCompatActivity {
             return insets;
         });
 
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> finish());
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            DeviceData deviceData = bundle.getParcelable("deviceData", DeviceData.class);
+            ArrayList<DeviceData> deviceDataList = bundle.getParcelableArrayList("deviceDataList");
 
-            if (deviceData != null && savedInstanceState == null) {
-                DeviceListFragment fragment = DeviceListFragment.newInstance(deviceData);
+            if (deviceDataList != null && savedInstanceState == null) {
+                DeviceListFragment fragment = DeviceListFragment.newInstance(deviceDataList);
 
                 getSupportFragmentManager()
                         .beginTransaction()

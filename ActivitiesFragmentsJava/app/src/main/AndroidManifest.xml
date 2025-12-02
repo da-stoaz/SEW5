@@ -12,13 +12,15 @@
         android:theme="@style/Theme.ActivitiesFragmentsJava">
         <activity
             android:name=".DeviceOverviewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ViewItemsActivity"
             android:exported="false" />
         <activity
             android:name=".CreateDeviceActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

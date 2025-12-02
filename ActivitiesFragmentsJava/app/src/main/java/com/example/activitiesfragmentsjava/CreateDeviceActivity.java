@@ -2,7 +2,6 @@ package com.example.activitiesfragmentsjava;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -14,7 +13,11 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.activitiesfragmentsjava.data.DeviceData;
 
+import java.util.ArrayList;
+
 public class CreateDeviceActivity extends AppCompatActivity {
+
+    private ArrayList<DeviceData> deviceDataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,14 @@ public class CreateDeviceActivity extends AppCompatActivity {
             return insets;
         });
 
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> finish());
+
+        deviceDataList = getIntent().getParcelableArrayListExtra("deviceDataList");
+        if (deviceDataList == null) {
+            deviceDataList = new ArrayList<>();
+        }
+
         EditText deviceName = this.findViewById(R.id.editTextDeviceName);
         EditText manufacturer = this.findViewById(R.id.editTextManufacturer);
         EditText serialNumber = this.findViewById(R.id.editTextSerialNumber);
@@ -34,20 +45,21 @@ public class CreateDeviceActivity extends AppCompatActivity {
 
         Button createButton = this.findViewById(R.id.createButton);
 
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DeviceData deviceData = new DeviceData(
-                        deviceName.getText().toString(),
-                        manufacturer.getText().toString(),
-                        serialNumber.getText().toString(),
-                        description.getText().toString()
-                );
+        createButton.setOnClickListener(v -> {
+            DeviceData newDeviceData = new DeviceData(
+                    deviceName.getText().toString(),
+                    manufacturer.getText().toString(),
+                    serialNumber.getText().toString(),
+                    description.getText().toString()
+            );
 
-                Intent intent = new Intent(CreateDeviceActivity.this, DeviceOverviewActivity.class);
-                intent.putExtra("deviceData", deviceData);
-                startActivity(intent);
-            }
+            deviceDataList.add(newDeviceData);
+
+            Intent intent = new Intent(CreateDeviceActivity.this, DeviceOverviewActivity.class);
+            intent.putParcelableArrayListExtra("deviceDataList", deviceDataList);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 }

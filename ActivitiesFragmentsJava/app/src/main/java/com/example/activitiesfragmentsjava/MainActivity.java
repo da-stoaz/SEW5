@@ -2,49 +2,42 @@ package com.example.activitiesfragmentsjava;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.activitiesfragmentsjava.data.DeviceData;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ArrayList<DeviceData> deviceDataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        // Dummy data for testing
+        if (deviceDataList.isEmpty()) {
+            deviceDataList.add(new DeviceData("Laptop", "Dell", "XPS15-123", "A powerful laptop"));
+            deviceDataList.add(new DeviceData("Smartphone", "Samsung", "S21-456", "A modern smartphone"));
+        }
 
         Button createItemButton = findViewById(R.id.createItemButton);
         Button viewItemsButton = findViewById(R.id.viewItemsButton);
 
-        createItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CreateDeviceActivity.class);
-                startActivity(intent);
-            }
+        createItemButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreateDeviceActivity.class);
+            intent.putParcelableArrayListExtra("deviceDataList", deviceDataList);
+            startActivity(intent);
         });
 
-        viewItemsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DeviceOverviewActivity.class);
-                startActivity(intent);
-            }
+        viewItemsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, DeviceOverviewActivity.class);
+            intent.putParcelableArrayListExtra("deviceDataList", deviceDataList);
+            startActivity(intent);
         });
-
     }
-
-
-
 }
