@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ActivitiesFragmentsJava">
         <activity
+            android:name=".ViewItemsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateItemActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

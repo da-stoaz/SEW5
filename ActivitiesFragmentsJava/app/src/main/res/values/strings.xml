@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">ActivitiesFragmentsJava</string>
+    <string name="welcome_message">Welcome to DeviceManager!</string>
+    <string name="create_item">Create Item</string>
+    <string name="view_items">View Items</string>
+    <string name="create_a_device">Create a Device!</string>
+    <string name="device_name">Device Name</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="serial_number">Serial Number</string>
+    <string name="description">Description</string>
 </resources>

@@ -5,23 +5,93 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.time.LocalDateTime;
+
 public class ItemData implements Parcelable {
 
-    private String title;
+    private String Id;
 
-    private String description;
+    private String DeviceName;
 
-    public ItemData(){
+    public ItemData() {
 
     }
 
-    public ItemData(String title, String description) {
-        this.title = title;
-        this.description = description;
+    public ItemData(String deviceName, String manufacturer, String serialNumber, String description) {
+        DeviceName = deviceName;
+        Manufacturer = manufacturer;
+        SerialNumber = serialNumber;
+        Description = description;
     }
+
+    private String Manufacturer;
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
+    public String getDeviceName() {
+        return DeviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        DeviceName = deviceName;
+    }
+
+    public String getManufacturer() {
+        return Manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        Manufacturer = manufacturer;
+    }
+
+    public String getSerialNumber() {
+        return SerialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        SerialNumber = serialNumber;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return UpdatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        UpdatedAt = updatedAt;
+    }
+
+    private String SerialNumber;
+
+    private String Description;
+
+    private LocalDateTime UpdatedAt;
+
 
     protected ItemData(Parcel in) {
-
+        Id = in.readString();
+        DeviceName = in.readString();
+        Manufacturer = in.readString();
+        SerialNumber = in.readString();
+        Description = in.readString();
+        if (in.readByte() == 1) {
+            UpdatedAt = LocalDateTime.parse(in.readString());
+        } else {
+            UpdatedAt = null;
+        }
     }
 
     public static final Creator<ItemData> CREATOR = new Creator<ItemData>() {
@@ -43,21 +113,16 @@ public class ItemData implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        dest.writeString(Id);
+        dest.writeString(DeviceName);
+        dest.writeString(Manufacturer);
+        dest.writeString(SerialNumber);
+        dest.writeString(Description);
+        if (UpdatedAt == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeString(UpdatedAt.toString());
+        }
     }
 }

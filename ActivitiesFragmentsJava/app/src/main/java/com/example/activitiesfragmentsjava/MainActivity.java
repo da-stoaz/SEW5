@@ -1,6 +1,9 @@
 package com.example.activitiesfragmentsjava;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,5 +23,28 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Button createItemButton = findViewById(R.id.createItemButton);
+        Button viewItemsButton = findViewById(R.id.viewItemsButton);
+
+        createItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CreateItemActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        viewItemsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ViewItemsActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
+
+
 }

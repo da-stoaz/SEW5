@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import net.stoaz.firstandroidproject.data.DataClass;
 import net.stoaz.firstandroidproject.fragments.MyFragment;
 
-public class Dashboard extends AppCompatActivity implements View.OnClickListener{
+public class Dashboard extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnSubmit;
 
@@ -43,10 +43,10 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
 
         Bundle bundle = getIntent().getExtras();
 
-        if (bundle != null){
+        if (bundle != null) {
             DataClass data = bundle.getParcelable("data", DataClass.class);
 
-            if (data != null){
+            if (data != null) {
                 txtCounter.setText(Integer.toString(data.getCount()));
                 fragMyFragment.setData(data);
                 Log.d(Dashboard.class.getSimpleName(), bundle.getString("name"));
@@ -58,14 +58,13 @@ public class Dashboard extends AppCompatActivity implements View.OnClickListener
         }
 
 
-
         btnSubmit = this.findViewById(R.id.btnSubmit);
         inpName = this.findViewById(R.id.inpName);
         btnSubmit.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         var str = inpName.getText();
 
         Log.i(R.class.getSimpleName(), "Name: " + str);
