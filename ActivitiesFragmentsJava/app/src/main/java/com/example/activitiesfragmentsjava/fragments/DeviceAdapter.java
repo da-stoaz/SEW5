@@ -19,6 +19,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
     private final ArrayList<DeviceData> deviceDataList;
     private final OnDeviceActionListener listener;
 
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.device_list_item, parent, false);
+        return new ViewHolder(view);
+    }
+
     public DeviceAdapter(ArrayList<DeviceData> deviceDataList, OnDeviceActionListener listener) {
         this.deviceDataList = deviceDataList;
         this.listener = listener;
@@ -32,22 +40,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         holder.serialNumber.setText(deviceData.getSerialNumber());
         holder.description.setText(deviceData.getDescription());
 
-        holder.editButton.setOnClickListener(v -> listener.onEdit(deviceData, position));
-        holder.deleteButton.setOnClickListener(v -> listener.onDelete(deviceData, position));
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.device_list_item, parent, false);
-        return new ViewHolder(view);
+        holder.editButton.setOnClickListener(v -> listener.onEdit(deviceData));
+        holder.deleteButton.setOnClickListener(v -> listener.onDelete(deviceData));
     }
 
     public interface OnDeviceActionListener {
-        void onEdit(DeviceData deviceData, int position);
+        void onEdit(DeviceData deviceData);
 
-        void onDelete(DeviceData deviceData, int position);
+        void onDelete(DeviceData deviceData);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.activitiesfragmentsjava.fragments;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.activitiesfragmentsjava.CreateDeviceActivity;
 import com.example.activitiesfragmentsjava.R;
 import com.example.activitiesfragmentsjava.data.DeviceData;
 import com.example.activitiesfragmentsjava.network.DeviceApiService;
@@ -33,7 +36,7 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
     private DeviceApiService apiService;
 
     public DeviceListFragment() {
-
+        // Required empty public constructor
     }
 
     public static DeviceListFragment newInstance(ArrayList<DeviceData> deviceDataList) {
@@ -52,8 +55,7 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_device_list, container, false);
 
@@ -65,7 +67,10 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         adapter = new DeviceAdapter(deviceDataList, this);
         recyclerView.setAdapter(adapter);
 
-        fab.setOnClickListener(v -> showDeviceDialog(null, -1));
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), CreateDeviceActivity.class);
+            startActivity(intent);
+        });
 
         return view;
     }
@@ -106,7 +111,7 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         }
     }
 
-    private void showDeviceDialog(@Nullable DeviceData device, int position) {
+    private void showEditDialog(@NonNull DeviceData device) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_device, null);
@@ -117,15 +122,12 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         EditText editSerialNumber = dialogView.findViewById(R.id.editTextSerialNumber);
         EditText editDescription = dialogView.findViewById(R.id.editTextDescription);
 
-        if (device != null) {
-            editDeviceName.setText(device.getDeviceName());
-            editManufacturer.setText(device.getManufacturer());
-            editSerialNumber.setText(device.getSerialNumber());
-            editDescription.setText(device.getDescription());
-            builder.setTitle("Edit Device");
-        } else {
-            builder.setTitle("Add Device");
-        }
+        // Pre-fill data for editing
+        editDeviceName.setText(device.getDeviceName());
+        editManufacturer.setText(device.getManufacturer());
+        editSerialNumber.setText(device.getSerialNumber());
+        editDescription.setText(device.getDescription());
+        builder.setTitle("Edit Device");
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String name = editDeviceName.getText().toString();
@@ -140,36 +142,20 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
 
             DeviceData newDeviceData = new DeviceData(name, manufacturer, serialNumber, description);
 
-            if (device != null) {
-                // Update existing device
-                String id = device.getId();
-                apiService.updateDevice(id, newDeviceData, new DeviceApiService.Callback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Toast.makeText(getContext(), "Device updated", Toast.LENGTH_SHORT).show();
-                        loadDevices();
-                    }
+            // Update existing device
+            String id = device.getId();
+            apiService.updateDevice(id, newDeviceData, new DeviceApiService.Callback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    Toast.makeText(getContext(), "Device updated", Toast.LENGTH_SHORT).show();
+                    loadDevices();
+                }
 
-                    @Override
-                    public void onError(Exception e) {
-                        Toast.makeText(getContext(), "Error updating device: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                // Create new device
-                apiService.createDevice(newDeviceData, new DeviceApiService.Callback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        Toast.makeText(getContext(), "Device created", Toast.LENGTH_SHORT).show();
-                        loadDevices();
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Toast.makeText(getContext(), "Error creating device: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+                @Override
+                public void onError(Exception e) {
+                    Toast.makeText(getContext(), "Error updating device: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -178,12 +164,12 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
     }
 
     @Override
-    public void onEdit(DeviceData deviceData, int position) {
-        showDeviceDialog(deviceData, position);
+    public void onEdit(DeviceData deviceData) {
+        showEditDialog(deviceData);
     }
 
     @Override
-    public void onDelete(DeviceData deviceData, int position) {
+    public void onDelete(DeviceData deviceData) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Device")
                 .setMessage("Are you sure you want to delete this device?")
