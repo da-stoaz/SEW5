@@ -13,11 +13,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.activitiesfragmentsjava.data.DeviceData;
 
+import org.chromium.net.CronetEngine;
+
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class CreateDeviceActivity extends AppCompatActivity {
 
     private ArrayList<DeviceData> deviceDataList;
+
+    private CronetEngine cronet;
+    private Executor executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +37,14 @@ public class CreateDeviceActivity extends AppCompatActivity {
             return insets;
         });
 
+        executor = Executors.newSingleThreadExecutor();
+        cronet = new CronetEngine.Builder(this).build();
+
+
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
-        deviceDataList = getIntent().getParcelableArrayListExtra("deviceDataList");
+        deviceDataList = getIntent().getParcelableArrayListExtra("deviceDataList", DeviceData.class);
         if (deviceDataList == null) {
             deviceDataList = new ArrayList<>();
         }

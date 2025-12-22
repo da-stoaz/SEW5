@@ -32,7 +32,7 @@ public class DeviceOverviewActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            ArrayList<DeviceData> deviceDataList = bundle.getParcelableArrayList("deviceDataList");
+            ArrayList<DeviceData> deviceDataList = bundle.getParcelableArrayList("deviceDataList", DeviceData.class);
 
             if (deviceDataList != null && savedInstanceState == null) {
                 DeviceListFragment fragment = DeviceListFragment.newInstance(deviceDataList);
