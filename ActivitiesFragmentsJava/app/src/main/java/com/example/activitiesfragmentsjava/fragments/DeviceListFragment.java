@@ -33,7 +33,7 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
     private DeviceApiService apiService;
 
     public DeviceListFragment() {
-        // Required empty public constructor
+
     }
 
     public static DeviceListFragment newInstance(ArrayList<DeviceData> deviceDataList) {
@@ -67,9 +67,13 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
 
         fab.setOnClickListener(v -> showDeviceDialog(null, -1));
 
-        loadDevices();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadDevices();
     }
 
     private void loadDevices() {
@@ -84,7 +88,9 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(), "Error loading devices: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Error loading devices: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 updateEmptyView();
             }
         });
@@ -136,7 +142,7 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
 
             if (device != null) {
                 // Update existing device
-                String id = device.getId(); // Assuming DeviceData has getId()
+                String id = device.getId();
                 apiService.updateDevice(id, newDeviceData, new DeviceApiService.Callback<Void>() {
                     @Override
                     public void onSuccess(Void result) {

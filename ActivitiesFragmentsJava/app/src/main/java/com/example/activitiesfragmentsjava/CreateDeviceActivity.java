@@ -1,9 +1,9 @@
 package com.example.activitiesfragmentsjava;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,19 +12,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.activitiesfragmentsjava.data.DeviceData;
-
-import org.chromium.net.CronetEngine;
-
-import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import com.example.activitiesfragmentsjava.network.DeviceApiService;
 
 public class CreateDeviceActivity extends AppCompatActivity {
 
-    private ArrayList<DeviceData> deviceDataList;
-
-    private CronetEngine cronet;
-    private Executor executor;
+    private DeviceApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +29,10 @@ public class CreateDeviceActivity extends AppCompatActivity {
             return insets;
         });
 
-        executor = Executors.newSingleThreadExecutor();
-        cronet = new CronetEngine.Builder(this).build();
-
+        apiService = new DeviceApiService(this);
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
-
-        deviceDataList = getIntent().getParcelableArrayListExtra("deviceDataList", DeviceData.class);
-        if (deviceDataList == null) {
-            deviceDataList = new ArrayList<>();
-        }
 
         EditText deviceName = this.findViewById(R.id.editTextDeviceName);
         EditText manufacturer = this.findViewById(R.id.editTextManufacturer);
@@ -57,20 +42,33 @@ public class CreateDeviceActivity extends AppCompatActivity {
         Button createButton = this.findViewById(R.id.createButton);
 
         createButton.setOnClickListener(v -> {
-            DeviceData newDeviceData = new DeviceData(
-                    deviceName.getText().toString(),
-                    manufacturer.getText().toString(),
-                    serialNumber.getText().toString(),
-                    description.getText().toString()
-            );
+            String name = deviceName.getText().toString();
+            String manuf = manufacturer.getText().toString();
+            String serial = serialNumber.getText().toString();
+            String desc = description.getText().toString();
 
-            deviceDataList.add(newDeviceData);
+            if (name.isEmpty() || manuf.isEmpty()) {
+                Toast.makeText(this, "Name and Manufacturer are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            Intent intent = new Intent(CreateDeviceActivity.this, DeviceOverviewActivity.class);
-            intent.putParcelableArrayListExtra("deviceDataList", deviceDataList);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            DeviceData newDeviceData = new DeviceData(name, manuf, serial, desc);
+
+            apiService.createDevice(newDeviceData, new DeviceApiService.Callback<Void>() {
+                @Override
+                public void onSuccess(Void result) {
+                    Toast.makeText(CreateDeviceActivity.this, "Device created", Toast.LENGTH_SHORT).show();
+                    // Navigate back to Overview. If Overview is singleTop or we just finish, it should resume.
+                    // But we want to ensure it refreshes.
+                    // Ideally, just finish() and let Overview refresh in onResume.
+                    finish();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Toast.makeText(CreateDeviceActivity.this, "Error creating device: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 }
