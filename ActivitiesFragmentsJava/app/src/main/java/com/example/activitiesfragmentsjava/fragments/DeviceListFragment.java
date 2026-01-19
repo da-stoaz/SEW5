@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,9 +29,6 @@ import java.util.List;
 
 public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDeviceActionListener {
 
-    private static final String ARG_DEVICES = "deviceDataList";
-
-    private ArrayList<DeviceData> deviceDataList = new ArrayList<>();
     private DeviceAdapter adapter;
     private TextView emptyView;
     private RecyclerView recyclerView;
@@ -39,18 +38,9 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         // Required empty public constructor
     }
 
-    public static DeviceListFragment newInstance(ArrayList<DeviceData> deviceDataList) {
-        DeviceListFragment fragment = new DeviceListFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_DEVICES, deviceDataList);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // We initialize the list but we will fetch data from API
         apiService = new DeviceApiService(requireContext());
     }
 
@@ -64,7 +54,11 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         FloatingActionButton fab = view.findViewById(R.id.fab);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new DeviceAdapter(deviceDataList, this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        adapter = new DeviceAdapter(this);
         recyclerView.setAdapter(adapter);
 
         fab.setOnClickListener(v -> {
@@ -85,24 +79,25 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         apiService.getAllDevices(new DeviceApiService.Callback<List<DeviceData>>() {
             @Override
             public void onSuccess(List<DeviceData> result) {
-                deviceDataList.clear();
-                deviceDataList.addAll(result);
-                adapter.notifyDataSetChanged();
-                updateEmptyView();
+                adapter.submitList(new ArrayList<>(result));
+                updateEmptyView(result.isEmpty(), null);
             }
 
             @Override
             public void onError(Exception e) {
-                if (getContext() != null) {
-                    Toast.makeText(getContext(), "Error loading devices: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-                updateEmptyView();
+                String message = "Load failed: " + e.getMessage();
+                updateEmptyView(true, message);
             }
         });
     }
 
-    private void updateEmptyView() {
-        if (deviceDataList.isEmpty()) {
+    private void updateEmptyView(boolean isEmpty, @Nullable String message) {
+        if (isEmpty) {
+            if (message != null) {
+                emptyView.setText(message);
+            } else {
+                emptyView.setText("No devices found.");
+            }
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
@@ -122,7 +117,6 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
         EditText editSerialNumber = dialogView.findViewById(R.id.editTextSerialNumber);
         EditText editDescription = dialogView.findViewById(R.id.editTextDescription);
 
-        // Pre-fill data for editing
         editDeviceName.setText(device.getDeviceName());
         editManufacturer.setText(device.getManufacturer());
         editSerialNumber.setText(device.getSerialNumber());
@@ -142,7 +136,6 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
 
             DeviceData newDeviceData = new DeviceData(name, manufacturer, serialNumber, description);
 
-            // Update existing device
             String id = device.getId();
             apiService.updateDevice(id, newDeviceData, new DeviceApiService.Callback<Void>() {
                 @Override

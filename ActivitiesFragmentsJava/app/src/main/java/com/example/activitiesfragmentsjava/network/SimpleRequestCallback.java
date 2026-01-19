@@ -21,6 +21,7 @@ public abstract class SimpleRequestCallback extends UrlRequest.Callback {
 
     @Override
     public void onResponseStarted(UrlRequest request, UrlResponseInfo info) {
+        // Start reading the response body in chunks.
         request.read(ByteBuffer.allocateDirect(32768));
     }
 
@@ -31,6 +32,7 @@ public abstract class SimpleRequestCallback extends UrlRequest.Callback {
         byteBuffer.get(bytes);
         responseBuffer.append(new String(bytes, StandardCharsets.UTF_8));
         byteBuffer.clear();
+        // Keep reading until Cronet signals completion.
         request.read(byteBuffer);
     }
 

@@ -22,38 +22,41 @@ import java.util.concurrent.Executors;
 
 public class DeviceApiService {
 
-    private static final String BASE_URL = "http://10.0.2.2:5055/devices";
+    private static final String TAG = "DeviceApiService";
+    private static final ExecutorService NETWORK_EXECUTOR = Executors.newSingleThreadExecutor();
+
+    private final ApiConfig apiConfig;
     private final CronetEngine cronetEngine;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public DeviceApiService(Context context) {
-        cronetEngine = new CronetEngine.Builder(context).build();
+        Context appContext = context.getApplicationContext();
+        apiConfig = new ApiConfig(appContext);
+        cronetEngine = CronetClient.getInstance(appContext, apiConfig);
     }
 
     public void getAllDevices(Callback<List<DeviceData>> callback) {
         UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
-                BASE_URL,
+                apiConfig.getDevicesUrl(),
                 new SimpleRequestCallback() {
                     @Override
                     public void onCompleted(String responseBody) {
                         try {
                             List<DeviceData> devices = parseDevices(responseBody);
-                            mainHandler.post(() -> callback.onSuccess(devices));
+                            postSuccess(callback, devices);
                         } catch (JSONException e) {
-                            mainHandler.post(() -> callback.onError(e));
+                            postError(callback, e);
                         }
                     }
 
                     @Override
                     public void onFailed(Exception e) {
-                        mainHandler.post(() -> callback.onError(e));
+                        postError(callback, e);
                     }
                 },
-                executor
+                NETWORK_EXECUTOR
         );
-        requestBuilder.disableCache(); // Ensure we get fresh data
-        requestBuilder.addHeader("Accept", "application/json");
+        configureJsonRequest(requestBuilder, true, UrlRequest.Builder.REQUEST_PRIORITY_MEDIUM);
         requestBuilder.build().start();
     }
 
@@ -61,33 +64,32 @@ public class DeviceApiService {
         try {
             String json = deviceToJson(device);
             UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
-                    BASE_URL,
+                    apiConfig.getDevicesUrl(),
                     new SimpleRequestCallback() {
                         @Override
                         public void onCompleted(String responseBody) {
-                            Log.d("DeviceApiService", "Create response: " + responseBody);
-                            mainHandler.post(() -> callback.onSuccess(null));
+                            Log.d(TAG, "Create response: " + responseBody);
+                            postSuccess(callback, null);
                         }
 
                         @Override
                         public void onFailed(Exception e) {
-                            Log.e("DeviceApiService", "Create device failed", e);
-                            mainHandler.post(() -> callback.onError(e));
+                            Log.e(TAG, "Create device failed", e);
+                            postError(callback, e);
                         }
                     },
-                    executor
+                    NETWORK_EXECUTOR
             );
             requestBuilder.setHttpMethod("POST");
-            requestBuilder.disableCache();
+            configureJsonRequest(requestBuilder, false, UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST);
             requestBuilder.addHeader("Content-Type", "application/json");
-            requestBuilder.addHeader("Accept", "application/json");
             requestBuilder.setUploadDataProvider(
                     UploadDataProviders.create(json.getBytes(StandardCharsets.UTF_8)),
-                    executor
+                    NETWORK_EXECUTOR
             );
             requestBuilder.build().start();
         } catch (JSONException e) {
-            callback.onError(e);
+            postError(callback, e);
         }
     }
 
@@ -95,56 +97,62 @@ public class DeviceApiService {
         try {
             String json = deviceToJson(device);
             UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
-                    BASE_URL + "/" + id,
+                    apiConfig.getDeviceUrl(id),
                     new SimpleRequestCallback() {
                         @Override
                         public void onCompleted(String responseBody) {
-                            mainHandler.post(() -> callback.onSuccess(null));
+                            postSuccess(callback, null);
                         }
 
                         @Override
                         public void onFailed(Exception e) {
-                            Log.e("DeviceApiService", "Update device failed", e);
-                            mainHandler.post(() -> callback.onError(e));
+                            Log.e(TAG, "Update device failed", e);
+                            postError(callback, e);
                         }
                     },
-                    executor
+                    NETWORK_EXECUTOR
             );
             requestBuilder.setHttpMethod("PUT");
-            requestBuilder.disableCache();
+            configureJsonRequest(requestBuilder, false, UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST);
             requestBuilder.addHeader("Content-Type", "application/json");
-            requestBuilder.addHeader("Accept", "application/json");
             requestBuilder.setUploadDataProvider(
                     UploadDataProviders.create(json.getBytes(StandardCharsets.UTF_8)),
-                    executor
+                    NETWORK_EXECUTOR
             );
             requestBuilder.build().start();
         } catch (JSONException e) {
-            callback.onError(e);
+            postError(callback, e);
         }
     }
 
     public void deleteDevice(String id, Callback<Void> callback) {
         UrlRequest.Builder requestBuilder = cronetEngine.newUrlRequestBuilder(
-                BASE_URL + "/" + id,
+                apiConfig.getDeviceUrl(id),
                 new SimpleRequestCallback() {
                     @Override
                     public void onCompleted(String responseBody) {
-                        mainHandler.post(() -> callback.onSuccess(null));
+                        postSuccess(callback, null);
                     }
 
                     @Override
                     public void onFailed(Exception e) {
-                        Log.e("DeviceApiService", "Delete device failed", e);
-                        mainHandler.post(() -> callback.onError(e));
+                        Log.e(TAG, "Delete device failed", e);
+                        postError(callback, e);
                     }
                 },
-                executor
+                NETWORK_EXECUTOR
         );
         requestBuilder.setHttpMethod("DELETE");
-        requestBuilder.disableCache();
-        requestBuilder.addHeader("Accept", "application/json");
+        configureJsonRequest(requestBuilder, false, UrlRequest.Builder.REQUEST_PRIORITY_HIGHEST);
         requestBuilder.build().start();
+    }
+
+    private void configureJsonRequest(UrlRequest.Builder builder, boolean allowCache, int priority) {
+        builder.addHeader("Accept", "application/json");
+        builder.setPriority(priority);
+        if (!allowCache) {
+            builder.disableCache();
+        }
     }
 
     private List<DeviceData> parseDevices(String json) throws JSONException {
@@ -172,6 +180,15 @@ public class DeviceApiService {
         obj.put("serialNumber", device.getSerialNumber());
         obj.put("description", device.getDescription());
         return obj.toString();
+    }
+
+    private <T> void postSuccess(Callback<T> callback, T result) {
+        // Cronet callbacks run off the main thread, so marshal UI updates safely.
+        mainHandler.post(() -> callback.onSuccess(result));
+    }
+
+    private void postError(Callback<?> callback, Exception e) {
+        mainHandler.post(() -> callback.onError(e));
     }
 
     public interface Callback<T> {

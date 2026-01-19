@@ -9,10 +9,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.activitiesfragmentsjava.data.DeviceData;
 import com.example.activitiesfragmentsjava.fragments.DeviceListFragment;
-
-import java.util.ArrayList;
 
 public class DeviceOverviewActivity extends AppCompatActivity {
 
@@ -30,18 +27,11 @@ public class DeviceOverviewActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            ArrayList<DeviceData> deviceDataList = bundle.getParcelableArrayList("deviceDataList", DeviceData.class);
-
-            if (deviceDataList != null && savedInstanceState == null) {
-                DeviceListFragment fragment = DeviceListFragment.newInstance(deviceDataList);
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainerView, fragment)
-                        .commit();
-            }
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new DeviceListFragment())
+                    .commit();
         }
     }
 }

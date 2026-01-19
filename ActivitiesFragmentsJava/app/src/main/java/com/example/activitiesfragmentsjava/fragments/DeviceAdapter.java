@@ -7,17 +7,48 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.activitiesfragmentsjava.R;
 import com.example.activitiesfragmentsjava.data.DeviceData;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
-public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
+public class DeviceAdapter extends ListAdapter<DeviceData, DeviceAdapter.ViewHolder> {
 
-    private final ArrayList<DeviceData> deviceDataList;
+    private static final DiffUtil.ItemCallback<DeviceData> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<DeviceData>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull DeviceData oldItem, @NonNull DeviceData newItem) {
+                    String oldId = oldItem.getId();
+                    String newId = newItem.getId();
+                    if (oldId != null && newId != null && !oldId.isEmpty() && !newId.isEmpty()) {
+                        return oldId.equals(newId);
+                    }
+                    return Objects.equals(oldItem.getDeviceName(), newItem.getDeviceName())
+                            && Objects.equals(oldItem.getManufacturer(), newItem.getManufacturer())
+                            && Objects.equals(oldItem.getSerialNumber(), newItem.getSerialNumber())
+                            && Objects.equals(oldItem.getDescription(), newItem.getDescription());
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull DeviceData oldItem, @NonNull DeviceData newItem) {
+                    return Objects.equals(oldItem.getDeviceName(), newItem.getDeviceName())
+                            && Objects.equals(oldItem.getManufacturer(), newItem.getManufacturer())
+                            && Objects.equals(oldItem.getSerialNumber(), newItem.getSerialNumber())
+                            && Objects.equals(oldItem.getDescription(), newItem.getDescription())
+                            && Objects.equals(oldItem.getId(), newItem.getId());
+                }
+            };
+
     private final OnDeviceActionListener listener;
+
+    public DeviceAdapter(OnDeviceActionListener listener) {
+        super(DIFF_CALLBACK);
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -27,14 +58,9 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
-    public DeviceAdapter(ArrayList<DeviceData> deviceDataList, OnDeviceActionListener listener) {
-        this.deviceDataList = deviceDataList;
-        this.listener = listener;
-    }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DeviceData deviceData = deviceDataList.get(position);
+        DeviceData deviceData = getItem(position);
         holder.deviceName.setText(deviceData.getDeviceName());
         holder.manufacturer.setText(deviceData.getManufacturer());
         holder.serialNumber.setText(deviceData.getSerialNumber());
@@ -48,11 +74,6 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.ViewHolder
         void onEdit(DeviceData deviceData);
 
         void onDelete(DeviceData deviceData);
-    }
-
-    @Override
-    public int getItemCount() {
-        return deviceDataList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
