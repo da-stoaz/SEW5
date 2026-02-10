@@ -1,6 +1,9 @@
 package net.stoaz.a.persistance;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import net.stoaz.a.persistance.db.ColumConstants;
+import net.stoaz.a.persistance.db.EventDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +39,22 @@ public class MainActivity extends AppCompatActivity {
             intent.setClass(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void readDatabase(){
+        EventDatabase eventDatabase = new EventDatabase(this);
+        SQLiteDatabase db = eventDatabase.getReadableDatabase();
+
+    }
+
+    private void writeDatabase(){
+        EventDatabase eventDatabase = new EventDatabase(this);
+
+        SQLiteDatabase db = eventDatabase.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ColumConstants.TIME, System.currentTimeMillis());
+        values.put(ColumConstants.EVENT, "Mitarbeitskontrolle");
+        db.insert(ColumConstants.TABLE_NAME, null, values);
     }
 
     /*
