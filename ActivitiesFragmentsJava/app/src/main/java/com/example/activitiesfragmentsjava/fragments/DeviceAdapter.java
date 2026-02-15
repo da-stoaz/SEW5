@@ -1,18 +1,15 @@
 package com.example.activitiesfragmentsjava.fragments;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.activitiesfragmentsjava.R;
 import com.example.activitiesfragmentsjava.data.DeviceData;
+import com.example.activitiesfragmentsjava.databinding.DeviceListItemBinding;
 
 import java.util.Objects;
 
@@ -24,13 +21,7 @@ public class DeviceAdapter extends ListAdapter<DeviceData, DeviceAdapter.ViewHol
                 public boolean areItemsTheSame(@NonNull DeviceData oldItem, @NonNull DeviceData newItem) {
                     String oldId = oldItem.getId();
                     String newId = newItem.getId();
-                    if (oldId != null && newId != null && !oldId.isEmpty() && !newId.isEmpty()) {
-                        return oldId.equals(newId);
-                    }
-                    return Objects.equals(oldItem.getDeviceName(), newItem.getDeviceName())
-                            && Objects.equals(oldItem.getManufacturer(), newItem.getManufacturer())
-                            && Objects.equals(oldItem.getSerialNumber(), newItem.getSerialNumber())
-                            && Objects.equals(oldItem.getDescription(), newItem.getDescription());
+                    return oldId != null && oldId.equals(newId);
                 }
 
                 @Override
@@ -38,8 +29,7 @@ public class DeviceAdapter extends ListAdapter<DeviceData, DeviceAdapter.ViewHol
                     return Objects.equals(oldItem.getDeviceName(), newItem.getDeviceName())
                             && Objects.equals(oldItem.getManufacturer(), newItem.getManufacturer())
                             && Objects.equals(oldItem.getSerialNumber(), newItem.getSerialNumber())
-                            && Objects.equals(oldItem.getDescription(), newItem.getDescription())
-                            && Objects.equals(oldItem.getId(), newItem.getId());
+                            && Objects.equals(oldItem.getDescription(), newItem.getDescription());
                 }
             };
 
@@ -53,21 +43,24 @@ public class DeviceAdapter extends ListAdapter<DeviceData, DeviceAdapter.ViewHol
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.device_list_item, parent, false);
-        return new ViewHolder(view);
+        DeviceListItemBinding binding = DeviceListItemBinding.inflate(
+                LayoutInflater.from(parent.getContext()),
+                parent,
+                false
+        );
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DeviceData deviceData = getItem(position);
-        holder.deviceName.setText(deviceData.getDeviceName());
-        holder.manufacturer.setText(deviceData.getManufacturer());
-        holder.serialNumber.setText(deviceData.getSerialNumber());
-        holder.description.setText(deviceData.getDescription());
+        holder.binding.textViewDeviceName.setText(deviceData.getDeviceName());
+        holder.binding.textViewManufacturer.setText(deviceData.getManufacturer());
+        holder.binding.textViewSerialNumber.setText(deviceData.getSerialNumber());
+        holder.binding.textViewDescription.setText(deviceData.getDescription());
 
-        holder.editButton.setOnClickListener(v -> listener.onEdit(deviceData));
-        holder.deleteButton.setOnClickListener(v -> listener.onDelete(deviceData));
+        holder.binding.buttonEdit.setOnClickListener(v -> listener.onEdit(deviceData));
+        holder.binding.buttonDelete.setOnClickListener(v -> listener.onDelete(deviceData));
     }
 
     public interface OnDeviceActionListener {
@@ -77,21 +70,11 @@ public class DeviceAdapter extends ListAdapter<DeviceData, DeviceAdapter.ViewHol
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView deviceName;
-        public final TextView manufacturer;
-        public final TextView serialNumber;
-        public final TextView description;
-        public final Button editButton;
-        public final Button deleteButton;
+        public final DeviceListItemBinding binding;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            deviceName = itemView.findViewById(R.id.textViewDeviceName);
-            manufacturer = itemView.findViewById(R.id.textViewManufacturer);
-            serialNumber = itemView.findViewById(R.id.textViewSerialNumber);
-            description = itemView.findViewById(R.id.textViewDescription);
-            editButton = itemView.findViewById(R.id.buttonEdit);
-            deleteButton = itemView.findViewById(R.id.buttonDelete);
+        public ViewHolder(@NonNull DeviceListItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

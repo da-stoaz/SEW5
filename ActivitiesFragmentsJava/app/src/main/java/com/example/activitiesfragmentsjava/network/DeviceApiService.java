@@ -32,7 +32,7 @@ public class DeviceApiService {
     public DeviceApiService(Context context) {
         Context appContext = context.getApplicationContext();
         apiConfig = new ApiConfig(appContext);
-        cronetEngine = CronetClient.getInstance(appContext, apiConfig);
+        cronetEngine = CronetClient.getInstance(appContext);
     }
 
     public void getAllDevices(Callback<List<DeviceData>> callback) {
