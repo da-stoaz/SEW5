@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SensorView">
+
+    <TextView
+        android:id="@+id/zAxisText"
+        android:layout_width="152dp"
+        android:layout_height="23dp"
+        android:fontFamily="serif-monospace"
+        android:text="Z-Pos:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yAxisText" />
+
+    <TextView
+        android:id="@+id/yAxisText"
+        android:layout_width="151dp"
+        android:layout_height="22dp"
+        android:fontFamily="serif-monospace"
+        android:text="Y-Pos:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xAxisText" />
+
+    <TextView
+        android:id="@+id/xAxisText"
+        android:layout_width="151dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="100dp"
+        android:fontFamily="serif-monospace"
+        android:text="X-Pos:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

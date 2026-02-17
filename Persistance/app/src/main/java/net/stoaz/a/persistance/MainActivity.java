@@ -3,10 +3,7 @@ package net.stoaz.a.persistance;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -39,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
             intent.setClass(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         });
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings_display_container, new FragmentSettingsDisplay())
+                    .commit();
+        }
     }
 
     private void readDatabase(){

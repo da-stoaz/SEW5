@@ -5,7 +5,7 @@
 
         <EditTextPreference
             app:key="signature"
-            app:title="@string/signature_title"
+            app:title="@string/base_address"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
@@ -33,7 +33,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="disable_brain"
-            android:title="Disable Brain"
+            android:title="@string/disable_brain_title"
             app:summary="Allows you to vibe-code Android for longer" />
 
     </PreferenceCategory>
