@@ -1,12 +1,9 @@
 package net.stoaz.a.persistance;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;

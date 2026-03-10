@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import net.stoaz.a.persistance.NotesActivity;
-
 public final class NotesDbHelper extends SQLiteOpenHelper implements NoteColumns {
 
     private static final String DB_NAME = "appdata.db";

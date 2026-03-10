@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Persistance</string>
+    <string name="app_name">Persistence</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="open_settings">Open Settings</string>
     <string name="settings_display_title">Aktuelle Einstellungen</string>
@@ -14,7 +14,7 @@
     <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="base_address">Base Adress</string>
+    <string name="base_address">Base Address</string>
     <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
