@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnSensor;
 
+    private Button btnGps;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnSensor = this.findViewById(R.id.sensorViewBtn);
         btnSensor.setOnClickListener(this);
+
+        btnGps = this.findViewById(R.id.gpsViewButton);
+        btnGps.setOnClickListener(this);
     }
 
     @Override
@@ -37,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if (v == btnSensor){
             Intent intent = new Intent(this, SensorView.class);
+            startActivity(intent);
+        }
+
+        if (v == btnGps){
+            Intent intent = new Intent(this, GpsView.class);
             startActivity(intent);
         }
     }

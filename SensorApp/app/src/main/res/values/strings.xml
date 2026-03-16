@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">SensorApp</string>
+    <string name="check_sensors">Check Sensors</string>
+    <string name="check_gps">Check GPS</string>
+    <string name="latitude_permission_missing">Latitude: permission missing</string>
+    <string name="longitude_permission_missing">Longitude: permission missing</string>
+    <string name="latitude_location_disabled">Latitude: location disabled</string>
+    <string name="longitude_location_disabled">Longitude: location disabled</string>
+    <string name="latitude_unavailable">Latitude: unavailable</string>
+    <string name="longitude_unavailable">Longitude: unavailable</string>
+    <string name="latitude_permission_denied">Latitude: permission denied</string>
+    <string name="longitude_permission_denied">Longitude: permission denied</string>
+    <string name="latitude">Latitude\n</string>
+    <string name="longitude">Longitude\n</string>
 </resources>

@@ -45,9 +45,9 @@ public class SensorView extends AppCompatActivity implements SensorEventListener
 
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (sensor != null) {
-            Toast.makeText(this, "Beschleunigungssensor vorhanden", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Accelerometer detected", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(this, "Beschleunigungssensor nicht vorhanden", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Accelerometer not detected", Toast.LENGTH_LONG).show();
         }
 
     }
