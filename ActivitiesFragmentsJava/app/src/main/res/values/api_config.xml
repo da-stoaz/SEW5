@@ -1,3 +1,3 @@
 <resources>
-    <string name="api_base_url">http://mbp.stoaz:5055/</string>
+    <string name="api_base_url">http://10.20.130.217:5055/</string>
 </resources>

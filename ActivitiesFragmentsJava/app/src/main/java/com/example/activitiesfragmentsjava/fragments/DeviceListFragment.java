@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.activitiesfragmentsjava.CreateDeviceActivity;
+import com.example.activitiesfragmentsjava.R;
 import com.example.activitiesfragmentsjava.data.DeviceData;
 import com.example.activitiesfragmentsjava.databinding.DialogDeviceBinding;
 import com.example.activitiesfragmentsjava.databinding.FragmentDeviceListBinding;
@@ -103,7 +104,7 @@ public class DeviceListFragment extends Fragment implements DeviceAdapter.OnDevi
             if (message != null) {
                 binding.emptyView.setText(message);
             } else {
-                binding.emptyView.setText("No devices found.");
+                binding.emptyView.setText(R.string.no_devices_found);
             }
             binding.recyclerView.setVisibility(View.GONE);
             binding.emptyView.setVisibility(View.VISIBLE);
