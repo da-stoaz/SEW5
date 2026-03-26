@@ -10,4 +10,11 @@ public class DescriptionVisitor implements ShapeVisitor<String> {
     public String visitRectangle(Rectangle rectangle) {
         return "Rectangle(width=" + rectangle.getWidth() + ", height=" + rectangle.getHeight() + ")";
     }
+
+    @Override
+    public String visitTriangle(Triangle triangle) {
+        return "Triangle(a=" + triangle.getA()
+                + ", b=" + triangle.getB()
+                + ", c=" + triangle.getC() + ")";
+    }
 }

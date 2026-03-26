@@ -2,7 +2,7 @@ package net.stoaz.a.designpatterns;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,11 +36,14 @@ public class MainActivity extends AppCompatActivity {
         List<Shape> shapes = new ArrayList<>();
         shapes.add(new Circle(3));
         shapes.add(new Rectangle(4, 6));
+        shapes.add(new Triangle(3, 4, 5));
 
         ShapeVisitor<String> descriptionVisitor = new DescriptionVisitor();
         ShapeVisitor<Double> areaVisitor = new AreaVisitor();
 
-        StringBuilder result = new StringBuilder("Visitor pattern demo:\n\n");
+        TextView outputTextView = findViewById(R.id.outputTextView);
+
+        StringBuilder result = new StringBuilder("Visitor pattern demo\n\n");
 
         for (Shape shape : shapes) {
             String description = shape.accept(descriptionVisitor);
@@ -48,11 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
             result.append(description)
                     .append(" -> area = ")
-                    .append(String.format(Locale.US, "%.2f", area))
+                    .append(String.format(Locale.GERMAN, "%.2f", area))
                     .append("\n");
         }
 
-        Log.d(TAG, result.toString());
-        Toast.makeText(this, "Check Logcat: " + TAG, Toast.LENGTH_LONG).show();
+        String output = result.toString();
+        outputTextView.setText(output);
+        Log.d(TAG, output);
     }
 }
